@@ -8,7 +8,7 @@
 
 /* WiFi credenciais */
 char ssid[] = "NV_FROES";
-char pass[] = "AP1908SF15";
+char pass[] = "<SENHA>";
 
 WiFiClient client;
 
