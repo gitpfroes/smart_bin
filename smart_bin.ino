@@ -19,6 +19,10 @@ const char* server = "api.thingspeak.com";
 //Inicializa o sensor nos pinos definidos acima
 Ultrasonic ultrasonic(pino_trigger, pino_echo);
 
+//Simulando 4 lixeiras
+long lixeiraID;
+
+
 void setup() {
   Serial.begin(9600);
   Serial.println("Lendo dados do sensor...");
@@ -41,7 +45,10 @@ void loop() {
   
   String data = String(cmMsec);
   Serial.println(data);
-  sendDataTS(cmMsec);
+
+  //Gera lixeira e envia para TS
+  lixeiraID = random(1, 5);
+  sendDataTS(cmMsec, lixeiraID);
   
   delay(2000);
 }
@@ -66,13 +73,17 @@ void connectWifi(){
 /***************************************************
  * Enviando os Dados do Sensor Ultrasonico  para o ThingSpeak
  **************************************************/
-void sendDataTS(float cmMsec){  
+void sendDataTS(float cmMsec, long id){  
    if (client.connect(server, 80)) { 
      Serial.println("Enviando dados para o ThingSpeak ");
      String postStr = apiKey;
-     postStr += "&field1=";
+     postStr += "&field";
+     postStr += id;
+     postStr += "=";
      postStr += String(cmMsec);
      postStr += "\r\n\r\n";
+
+     Serial.println(postStr);
    
      client.print("POST /update HTTP/1.1\n");
      client.print("Host: api.thingspeak.com\n");
